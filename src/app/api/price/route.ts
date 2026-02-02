@@ -26,12 +26,15 @@ async function fetchEstimated(
   amount: number,
 ): Promise<Quote> {
   const apiKey = process.env.SIMPLESWAP_API_KEY;
+  if (!apiKey) {
+    return { price: null, error: "Missing SIMPLESWAP_API_KEY" };
+  }
   const url = new URL("https://api.simpleswap.io/get_estimated");
   url.searchParams.set("currency_from", normalizeCurrency(currencyFrom));
   url.searchParams.set("currency_to", normalizeCurrency(currencyTo));
   url.searchParams.set("amount", String(amount));
   url.searchParams.set("fixed", "false");
-  if (apiKey) url.searchParams.set("api_key", apiKey);
+  url.searchParams.set("api_key", apiKey);
 
   const res = await fetch(url, {
     headers: {
@@ -143,7 +146,9 @@ export async function GET(request: Request) {
     usd = fallback.usd;
     if (usdc != null || usd != null) {
       source = "coingecko";
-      error = fallback.error;
+      error = usdcQuote.error
+        ? `${usdcQuote.error} (using CoinGecko spot as fallback)`
+        : fallback.error;
     } else {
       error = error ?? fallback.error;
     }

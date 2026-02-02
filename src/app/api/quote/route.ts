@@ -65,12 +65,18 @@ async function fetchEstimated(
   amount: number,
 ): Promise<{ estimated: number | null; min?: number | null; error?: string }> {
   const apiKey = process.env.SIMPLESWAP_API_KEY;
+  if (!apiKey) {
+    return {
+      estimated: null,
+      error: "Missing SIMPLESWAP_API_KEY",
+    };
+  }
   const url = new URL("https://api.simpleswap.io/get_estimated");
   url.searchParams.set("currency_from", normalizeFrom(from));
   url.searchParams.set("currency_to", to);
   url.searchParams.set("amount", String(amount));
   url.searchParams.set("fixed", "false");
-  if (apiKey) url.searchParams.set("api_key", apiKey);
+  url.searchParams.set("api_key", apiKey);
 
   const res = await fetch(url, {
     headers: { accept: "application/json" },
@@ -153,6 +159,34 @@ export async function GET(request: Request) {
   const r = await fetchEstimated(symbol, to, amount);
 
   if (r.estimated == null) {
+    const spotUsdc = await fetchCoinGeckoSpotUSDC(symbol);
+    if (spotUsdc != null) {
+      const estimatedUsdc = spotUsdc * amount;
+      const totalUsd = estimatedUsdc;
+      const effectiveUsdPerToken = amount > 0 ? totalUsd / amount : null;
+
+      return NextResponse.json(
+        {
+          symbol,
+          amount,
+          network: to === "usdcspl" ? "sol" : "eth",
+          estimatedUsdc,
+          totalUsd,
+          effectiveUsdPerToken,
+          spotTotalUsd: estimatedUsdc,
+          impliedFeeUsd: 0,
+          impliedFeePct: 0,
+          minAmount: r.min ?? null,
+          error: r.error
+            ? `${r.error} (using CoinGecko spot as fallback)`
+            : "Using CoinGecko spot as fallback",
+          source: "coingecko",
+          fetchedAt: Date.now(),
+        },
+        { status: 200 },
+      );
+    }
+
     return NextResponse.json(
       {
         symbol,
