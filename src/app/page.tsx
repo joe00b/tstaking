@@ -166,6 +166,17 @@ export default function Home() {
   const [amount, setAmount] = useState<string>("");
   const [amountTouched, setAmountTouched] = useState(false);
 
+  const [pricesRefreshNonce, setPricesRefreshNonce] = useState(0);
+  const [swapRefreshNonce, setSwapRefreshNonce] = useState(0);
+  const [stakingRefreshNonce, setStakingRefreshNonce] = useState(0);
+
+  const [touchStart, setTouchStart] = useState<{
+    x: number;
+    y: number;
+    atTop: boolean;
+    ignore: boolean;
+  } | null>(null);
+
   const [swapAutoRefreshMs, setSwapAutoRefreshMs] = useState<number>(15_000);
   const [stakingAutoRefreshMs, setStakingAutoRefreshMs] = useState<number>(60_000);
 
@@ -197,7 +208,68 @@ export default function Home() {
       cancelled = true;
       if (id != null) window.clearInterval(id);
     };
-  }, [tokens, pricesAutoRefreshMs]);
+  }, [tokens, pricesAutoRefreshMs, pricesRefreshNonce]);
+
+  function triggerRefreshForTab(nextTab: "prices" | "swap" | "staking") {
+    if (nextTab === "prices") setPricesRefreshNonce((v) => v + 1);
+    if (nextTab === "swap") setSwapRefreshNonce((v) => v + 1);
+    if (nextTab === "staking") setStakingRefreshNonce((v) => v + 1);
+  }
+
+  function onTouchStart(e: React.TouchEvent) {
+    const t = e.touches[0];
+    if (!t) return;
+
+    const target = e.target as HTMLElement | null;
+    const tag = target?.tagName?.toLowerCase();
+    const ignore =
+      tag === "input" ||
+      tag === "select" ||
+      tag === "textarea" ||
+      tag === "button" ||
+      Boolean(target?.closest("input,select,textarea,button,a"));
+
+    setTouchStart({
+      x: t.clientX,
+      y: t.clientY,
+      atTop: (window.scrollY ?? 0) <= 0,
+      ignore,
+    });
+  }
+
+  function onTouchEnd(e: React.TouchEvent) {
+    if (!touchStart) return;
+    setTouchStart(null);
+
+    if (touchStart.ignore) return;
+    const t = e.changedTouches[0];
+    if (!t) return;
+
+    const dx = t.clientX - touchStart.x;
+    const dy = t.clientY - touchStart.y;
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+
+    const swipeThreshold = 55;
+    const pullThreshold = 80;
+
+    if (touchStart.atTop && dy > pullThreshold && absDx < 30) {
+      triggerRefreshForTab(tab);
+      return;
+    }
+
+    if (absDx > swipeThreshold && absDx > absDy) {
+      const order: Array<typeof tab> = ["prices", "swap", "staking"];
+      const idx = order.indexOf(tab);
+      if (idx === -1) return;
+
+      if (dx > 0 && idx < order.length - 1) {
+        setTab(order[idx + 1]);
+      } else if (dx < 0 && idx > 0) {
+        setTab(order[idx - 1]);
+      }
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -237,7 +309,11 @@ export default function Home() {
 
   return (
     <div className="app-bg min-h-screen font-sans text-zinc-50">
-      <main className="mx-auto flex w-full max-w-md flex-col gap-4 px-3 py-6">
+      <main
+        className="mx-auto flex w-full max-w-md flex-col gap-4 px-3 py-6"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Image
@@ -387,6 +463,7 @@ export default function Home() {
                 onSymbolChange={setSelectedSymbol}
                 amount={amount}
                 autoRefreshMs={swapAutoRefreshMs}
+                refreshNonce={swapRefreshNonce}
                 onAmountChange={(v) => {
                   setAmountTouched(true);
                   setAmount(v);
@@ -421,6 +498,7 @@ export default function Home() {
                 onSymbolChange={setSelectedSymbol}
                 amount={amount}
                 autoRefreshMs={swapAutoRefreshMs}
+                refreshNonce={swapRefreshNonce}
                 onAmountChange={(v) => {
                   setAmountTouched(true);
                   setAmount(v);
@@ -456,7 +534,12 @@ export default function Home() {
                 </select>
               </div>
             </div>
-            <StakingTracker prices={prices} autoRefreshMs={stakingAutoRefreshMs} refreshLabel={refreshLabel} />
+            <StakingTracker
+              prices={prices}
+              autoRefreshMs={stakingAutoRefreshMs}
+              refreshLabel={refreshLabel}
+              refreshNonce={stakingRefreshNonce}
+            />
           </section>
         ) : null}
       </main>
@@ -1695,6 +1778,7 @@ function Converter({
   onSymbolChange,
   amount,
   autoRefreshMs,
+  refreshNonce,
   onAmountChange,
 }: {
   prices: Record<string, PriceRow>;
@@ -1702,6 +1786,7 @@ function Converter({
   onSymbolChange: (v: string) => void;
   amount: string;
   autoRefreshMs: number;
+  refreshNonce?: number;
   onAmountChange: (v: string) => void;
 }) {
   const [network, setNetwork] = useState<"sol" | "eth">("sol");
@@ -1777,7 +1862,7 @@ function Converter({
       cancelled = true;
       if (id != null) window.clearInterval(id);
     };
-  }, [symbol, parsedAmount, network, autoRefreshMs]);
+  }, [symbol, parsedAmount, network, autoRefreshMs, refreshNonce]);
 
   return (
     <div className="mt-3 flex w-full flex-col gap-3">
@@ -1951,10 +2036,12 @@ function StakingTracker({
   prices,
   autoRefreshMs,
   refreshLabel,
+  refreshNonce,
 }: {
   prices: Record<string, PriceRow>;
   autoRefreshMs: number;
   refreshLabel: (ms: number) => string;
+  refreshNonce?: number;
 }) {
   const defaultAddresses = useMemo(
     () => [
@@ -2116,7 +2203,7 @@ function StakingTracker({
       cancelled = true;
       if (id != null) window.clearInterval(id);
     };
-  }, [defaultAddresses, autoRefreshMs]);
+  }, [defaultAddresses, autoRefreshMs, refreshNonce]);
 
   const startedAt = tracking?.startedAt ?? null;
   const days = startedAt == null ? 0 : daysBetween(startedAt, Date.now());
@@ -2541,6 +2628,7 @@ function NetworkFees({
   onSymbolChange,
   amount,
   autoRefreshMs,
+  refreshNonce,
   onAmountChange,
 }: {
   prices: Record<string, PriceRow>;
@@ -2548,11 +2636,12 @@ function NetworkFees({
   onSymbolChange: (v: string) => void;
   amount: string;
   autoRefreshMs: number;
+  refreshNonce?: number;
   onAmountChange: (v: string) => void;
 }) {
   const [data, setData] = useState<FeesResponse | null>(null);
   const [loading, setLoading] = useState(false);
-  const [refreshNonce, setRefreshNonce] = useState(0);
+  const [localRefreshNonce, setLocalRefreshNonce] = useState(0);
   const [feesLastUpdatedAt, setFeesLastUpdatedAt] = useState<number | null>(
     null,
   );
@@ -2592,7 +2681,7 @@ function NetworkFees({
       cancelled = true;
       if (id != null) window.clearInterval(id);
     };
-  }, [symbol, amountNum, refreshNonce, autoRefreshMs]);
+  }, [symbol, amountNum, autoRefreshMs, refreshNonce, localRefreshNonce]);
 
   const spotRow = prices[symbol];
   const spotUsdc = spotRow?.usdc ?? data?.spotUsdc ?? null;
@@ -2654,7 +2743,7 @@ function NetworkFees({
             <button
               type="button"
               className="ios-press h-7 rounded-full border border-white/10 bg-black/30 px-3 text-[11px] font-semibold text-zinc-50 hover:bg-black/40"
-              onClick={() => setRefreshNonce((v) => v + 1)}
+              onClick={() => setLocalRefreshNonce((v) => v + 1)}
               disabled={loading}
             >
               Refresh
