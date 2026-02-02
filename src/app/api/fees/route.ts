@@ -139,6 +139,30 @@ export async function GET(request: Request) {
 
   const spotUsdc = await fetchCoinGeckoSpotUSDC(symbol);
 
+  const apiKey = process.env.SIMPLESWAP_API_KEY;
+  if (!apiKey) {
+    const targets: Array<NetworkFeeRow["to"]> = ["usdc-sol", "usdc-eth"];
+    const rows = targets.map((to) => {
+      const estimatedUsdc = spotUsdc == null ? null : spotUsdc * amount;
+      return {
+        to,
+        estimatedUsdc,
+        impliedFeeUsdc: estimatedUsdc == null ? null : 0,
+        impliedFeePct: estimatedUsdc == null ? null : 0,
+        error: "Missing SIMPLESWAP_API_KEY (using CoinGecko spot as fallback)",
+      } satisfies NetworkFeeRow;
+    });
+
+    return NextResponse.json({
+      symbol,
+      amount,
+      spotUsdc,
+      rows,
+      quoteFetchedAt: Date.now(),
+      fetchedAt: Date.now(),
+    });
+  }
+
   const targets: Array<NetworkFeeRow["to"]> = ["usdc-sol", "usdc-eth"];
   const estimates = await Promise.all(
     targets.map(async (to) => {
