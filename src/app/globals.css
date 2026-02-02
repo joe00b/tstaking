@@ -46,9 +46,10 @@ body::before {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(1200px 600px at 18% 10%, var(--glow-teal), transparent 58%),
-    radial-gradient(950px 560px at 88% 8%, var(--glow-magenta), transparent 55%),
-    radial-gradient(800px 520px at 40% 115%, rgba(255, 106, 0, 0.14), transparent 55%),
+    radial-gradient(1200px 700px at 22% 12%, rgba(255, 106, 0, 0.55), transparent 60%),
+    radial-gradient(900px 560px at 85% 10%, rgba(255, 214, 10, 0.40), transparent 58%),
+    radial-gradient(800px 520px at 45% 115%, rgba(255, 106, 0, 0.22), transparent 58%),
+    linear-gradient(135deg, #ff6a00 0%, #ffd60a 42%, #ff6a00 100%),
     linear-gradient(135deg, #05060a 0%, #070814 40%, #06050a 100%);
   opacity: 1;
   filter: saturate(1.15);
@@ -67,9 +68,10 @@ body::before {
   pointer-events: none;
   z-index: -1;
   background:
-    radial-gradient(1200px 600px at 18% 10%, var(--glow-teal), transparent 58%),
-    radial-gradient(950px 560px at 88% 8%, var(--glow-magenta), transparent 55%),
-    radial-gradient(800px 520px at 40% 115%, rgba(255, 106, 0, 0.18), transparent 55%),
+    radial-gradient(1200px 700px at 22% 12%, rgba(255, 106, 0, 0.55), transparent 60%),
+    radial-gradient(900px 560px at 85% 10%, rgba(255, 214, 10, 0.40), transparent 58%),
+    radial-gradient(800px 520px at 45% 115%, rgba(255, 106, 0, 0.22), transparent 58%),
+    linear-gradient(135deg, #ff6a00 0%, #ffd60a 42%, #ff6a00 100%),
     linear-gradient(135deg, #05060a 0%, #070814 40%, #06050a 100%);
   opacity: 1;
   filter: saturate(1.2);
