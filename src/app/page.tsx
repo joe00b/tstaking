@@ -2300,7 +2300,7 @@ function StakingTracker({
   return (
     <div className="flex flex-col gap-3">
       {alertBanner ? (
-        <div className="rounded-xl border border-white/10 bg-black/30 p-3">
+        <div className="app-glass rounded-xl p-3">
           <div className="flex items-start justify-between gap-3">
             <div className="text-xs text-zinc-50">{alertBanner}</div>
             <button
@@ -2314,7 +2314,7 @@ function StakingTracker({
         </div>
       ) : null}
 
-      <div className="rounded-xl border border-white/10 bg-gradient-to-br from-[rgba(255,106,0,0.18)] via-black/30 to-black/70 p-3">
+      <div className="app-glass rounded-xl p-3">
         <div className="flex items-start justify-between gap-3">
           <div>
             <div className="text-xs font-semibold text-zinc-200">Tracking summary</div>
@@ -2381,7 +2381,7 @@ function StakingTracker({
             <div className="text-[11px] text-zinc-400">Days</div>
             <div className="mt-1 text-lg font-semibold text-zinc-50">{days}</div>
           </div>
-          <div className="rounded-xl border border-[rgba(255,106,0,0.35)] bg-[rgba(255,106,0,0.10)] p-3">
+          <div className="rounded-xl border border-white/10 bg-black/30 p-3">
             <div className="text-[11px] text-zinc-400">Earned (USD)</div>
             <div className="mt-1 text-lg font-semibold text-[#ff6a00]">
               {tracking == null ? "—" : formatMoney(totalEarnedUsd, "USD")}
@@ -2395,7 +2395,7 @@ function StakingTracker({
                 : `${formatCompactNumber(totalEarnedAll, 3)} TFUEL`}
             </div>
           </div>
-          <div className="rounded-xl border border-[rgba(20,184,166,0.25)] bg-[rgba(20,184,166,0.08)] p-3">
+          <div className="rounded-xl border border-white/10 bg-black/30 p-3">
             <div className="text-[11px] text-zinc-400">Lifetime earned</div>
             <div className="mt-1 text-sm font-semibold text-zinc-50">
               {lifetimeEarnedTotal == null
@@ -2406,7 +2406,7 @@ function StakingTracker({
         </div>
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-gradient-to-br from-[rgba(20,184,166,0.16)] via-black/30 to-black/70 p-3 text-sm">
+      <div className="app-glass rounded-xl p-3 text-sm">
         <div className="flex items-start justify-between gap-3">
           <div>
             <div className="text-xs font-semibold text-[#14b8a6]">Alerts</div>
@@ -2498,7 +2498,7 @@ function StakingTracker({
           </div>
         </div>
       </div>
-      <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-sm">
+      <div className="app-glass rounded-xl p-3 text-sm">
         <div className="flex items-start justify-between">
           <div>
             <div className="text-xs font-semibold">Wallets</div>
