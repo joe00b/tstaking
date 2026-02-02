@@ -512,31 +512,34 @@ export default function Home() {
         ) : null}
 
         {tab === "staking" ? (
-          <section className="tab-enter app-glass rounded-2xl p-3">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <h2 className="text-sm font-semibold">Staking</h2>
-                <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-                  Tracks days elapsed and estimates rewards.
-                </p>
-              </div>
-              <div className="flex flex-col items-end gap-1">
-                <div className="text-[11px] text-zinc-600 dark:text-zinc-400">
-                  Auto refresh
+          <section className="tab-enter flex flex-col gap-3">
+            <div className="app-glass rounded-2xl p-2">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <h2 className="text-sm font-semibold">Staking</h2>
+                  <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
+                    Tracks days elapsed and estimates rewards.
+                  </p>
                 </div>
-                <select
-                  className="h-8 rounded-lg border border-black/10 bg-white px-2 text-[11px] outline-none focus:ring-2 focus:ring-zinc-400 dark:border-white/10 dark:bg-black"
-                  value={stakingAutoRefreshMs}
-                  onChange={(e) => setStakingAutoRefreshMs(Number(e.target.value))}
-                >
-                  {refreshOptions.map((o) => (
-                    <option key={o.ms} value={o.ms}>
-                      {o.label}
-                    </option>
-                  ))}
-                </select>
+                <div className="flex flex-col items-end gap-1">
+                  <div className="text-[11px] text-zinc-600 dark:text-zinc-400">
+                    Auto refresh
+                  </div>
+                  <select
+                    className="h-8 rounded-lg border border-black/10 bg-white px-2 text-[11px] outline-none focus:ring-2 focus:ring-zinc-400 dark:border-white/10 dark:bg-black"
+                    value={stakingAutoRefreshMs}
+                    onChange={(e) => setStakingAutoRefreshMs(Number(e.target.value))}
+                  >
+                    {refreshOptions.map((o) => (
+                      <option key={o.ms} value={o.ms}>
+                        {o.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
+
             <StakingTracker
               prices={prices}
               autoRefreshMs={stakingAutoRefreshMs}
@@ -2295,7 +2298,7 @@ function StakingTracker({
     addr.length <= 14 ? addr : `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 
   return (
-    <div className="mt-3 flex flex-col gap-3">
+    <div className="flex flex-col gap-3">
       {alertBanner ? (
         <div className="rounded-xl border border-white/10 bg-black/30 p-3">
           <div className="flex items-start justify-between gap-3">
