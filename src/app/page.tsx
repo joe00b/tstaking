@@ -237,7 +237,7 @@ export default function Home() {
 
   return (
     <div className="app-bg min-h-screen font-sans text-zinc-50">
-      <main className="mx-auto flex w-full max-w-md flex-col gap-4 px-4 py-6">
+      <main className="mx-auto flex w-full max-w-md flex-col gap-4 px-3 py-6">
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Image
@@ -332,100 +332,100 @@ export default function Home() {
         ) : null}
 
         {tab === "swap" ? (
-          <section className="tab-enter app-glass rounded-2xl p-4">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <h2 className="text-sm font-semibold">Swap</h2>
-                <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-                  Convert TFUEL/THETA to USDC and compare Solana vs Ethereum.
-                </p>
-              </div>
-              <div className="flex flex-col items-end gap-1">
-                <div className="text-[11px] text-zinc-600 dark:text-zinc-400">
-                  Auto refresh
+          <section className="tab-enter flex flex-col gap-3">
+            <div className="app-glass rounded-2xl p-3">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <h2 className="text-sm font-semibold">Swap</h2>
+                  <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
+                    Convert TFUEL/THETA to USDC and compare Solana vs Ethereum.
+                  </p>
                 </div>
-                <select
-                  className="h-8 rounded-lg border border-black/10 bg-white px-2 text-[11px] outline-none focus:ring-2 focus:ring-zinc-400 dark:border-white/10 dark:bg-black"
-                  value={swapAutoRefreshMs}
-                  onChange={(e) => setSwapAutoRefreshMs(Number(e.target.value))}
-                >
-                  {refreshOptions.map((o) => (
-                    <option key={o.ms} value={o.ms}>
-                      {o.label}
-                    </option>
-                  ))}
-                </select>
+                <div className="flex flex-col items-end gap-1">
+                  <div className="text-[11px] text-zinc-600 dark:text-zinc-400">
+                    Auto refresh
+                  </div>
+                  <select
+                    className="h-8 rounded-lg border border-black/10 bg-white px-2 text-[11px] outline-none focus:ring-2 focus:ring-zinc-400 dark:border-white/10 dark:bg-black"
+                    value={swapAutoRefreshMs}
+                    onChange={(e) => setSwapAutoRefreshMs(Number(e.target.value))}
+                  >
+                    {refreshOptions.map((o) => (
+                      <option key={o.ms} value={o.ms}>
+                        {o.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
 
-            <div className="mt-3 grid gap-3">
-              <div className="app-glass min-w-0 overflow-hidden rounded-xl p-3">
-                <div className="flex items-baseline justify-between">
-                  <div className="text-sm font-semibold">
-                    Converter{" "}
-                    <span
-                      className={
-                        selectedSymbol === "tfuel"
-                          ? "text-[#ff6a00]"
-                          : "text-[#14b8a6]"
-                      }
-                    >
-                      {selectedSymbol.toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="text-[11px] text-zinc-600 dark:text-zinc-400">
-                    Spot vs SimpleSwap
-                  </div>
+            <div className="app-glass min-w-0 overflow-hidden rounded-xl p-3">
+              <div className="flex items-baseline justify-between">
+                <div className="text-sm font-semibold">
+                  Converter{" "}
+                  <span
+                    className={
+                      selectedSymbol === "tfuel"
+                        ? "text-[#ff6a00]"
+                        : "text-[#14b8a6]"
+                    }
+                  >
+                    {selectedSymbol.toUpperCase()}
+                  </span>
                 </div>
-                <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-                  Value and estimated conversion.
-                </p>
-                <Converter
-                  prices={prices}
-                  symbol={selectedSymbol}
-                  onSymbolChange={setSelectedSymbol}
-                  amount={amount}
-                  autoRefreshMs={swapAutoRefreshMs}
-                  onAmountChange={(v) => {
-                    setAmountTouched(true);
-                    setAmount(v);
-                  }}
-                />
+                <div className="text-[11px] text-zinc-600 dark:text-zinc-400">
+                  Spot vs SimpleSwap
+                </div>
               </div>
+              <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
+                Value and estimated conversion.
+              </p>
+              <Converter
+                prices={prices}
+                symbol={selectedSymbol}
+                onSymbolChange={setSelectedSymbol}
+                amount={amount}
+                autoRefreshMs={swapAutoRefreshMs}
+                onAmountChange={(v) => {
+                  setAmountTouched(true);
+                  setAmount(v);
+                }}
+              />
+            </div>
 
-              <div className="app-glass min-w-0 overflow-hidden rounded-xl p-3">
-                <div className="flex items-baseline justify-between">
-                  <div className="text-sm font-semibold">
-                    Network comparison{" "}
-                    <span
-                      className={
-                        selectedSymbol === "tfuel"
-                          ? "text-[#ff6a00]"
-                          : "text-[#14b8a6]"
-                      }
-                    >
-                      {selectedSymbol.toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="text-[11px] text-zinc-600 dark:text-zinc-400">
-                    Best route highlighted
-                  </div>
+            <div className="app-glass min-w-0 overflow-hidden rounded-xl p-3">
+              <div className="flex items-baseline justify-between">
+                <div className="text-sm font-semibold">
+                  Network comparison{" "}
+                  <span
+                    className={
+                      selectedSymbol === "tfuel"
+                        ? "text-[#ff6a00]"
+                        : "text-[#14b8a6]"
+                    }
+                  >
+                    {selectedSymbol.toUpperCase()}
+                  </span>
                 </div>
-                <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-                  Solana (USDC SPL) is usually cheaper than Ethereum (USDC ERC-20).
-                </p>
-                <NetworkFees
-                  prices={prices}
-                  symbol={selectedSymbol}
-                  onSymbolChange={setSelectedSymbol}
-                  amount={amount}
-                  autoRefreshMs={swapAutoRefreshMs}
-                  onAmountChange={(v) => {
-                    setAmountTouched(true);
-                    setAmount(v);
-                  }}
-                />
+                <div className="text-[11px] text-zinc-600 dark:text-zinc-400">
+                  Best route highlighted
+                </div>
               </div>
+              <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
+                Solana (USDC SPL) is usually cheaper than Ethereum (USDC ERC-20).
+              </p>
+              <NetworkFees
+                prices={prices}
+                symbol={selectedSymbol}
+                onSymbolChange={setSelectedSymbol}
+                amount={amount}
+                autoRefreshMs={swapAutoRefreshMs}
+                onAmountChange={(v) => {
+                  setAmountTouched(true);
+                  setAmount(v);
+                }}
+              />
             </div>
           </section>
         ) : null}
