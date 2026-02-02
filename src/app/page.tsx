@@ -310,7 +310,7 @@ export default function Home() {
   return (
     <div className="app-bg min-h-screen font-sans text-zinc-50">
       <main
-        className="mx-auto flex w-full max-w-md flex-col gap-4 px-3 py-6"
+        className="mx-auto flex w-full max-w-md flex-col gap-4 px-2 py-6"
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
@@ -377,7 +377,7 @@ export default function Home() {
         </nav>
 
         {tab === "prices" ? (
-          <section className="tab-enter app-glass rounded-2xl p-4">
+          <section className="tab-enter app-glass rounded-2xl p-3">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <h2 className="text-sm font-semibold">Dashboard</h2>
@@ -409,7 +409,7 @@ export default function Home() {
 
         {tab === "swap" ? (
           <section className="tab-enter flex flex-col gap-3">
-            <div className="app-glass rounded-2xl p-3">
+            <div className="app-glass rounded-2xl p-2">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <h2 className="text-sm font-semibold">Swap</h2>
@@ -436,7 +436,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="app-glass min-w-0 overflow-hidden rounded-xl p-3">
+            <div className="app-glass min-w-0 overflow-hidden rounded-xl p-2">
               <div className="flex items-baseline justify-between">
                 <div className="text-sm font-semibold">
                   Converter{" "}
@@ -471,7 +471,7 @@ export default function Home() {
               />
             </div>
 
-            <div className="app-glass min-w-0 overflow-hidden rounded-xl p-3">
+            <div className="app-glass min-w-0 overflow-hidden rounded-xl p-2">
               <div className="flex items-baseline justify-between">
                 <div className="text-sm font-semibold">
                   Network comparison{" "}
@@ -509,7 +509,7 @@ export default function Home() {
         ) : null}
 
         {tab === "staking" ? (
-          <section className="tab-enter app-glass rounded-2xl p-4">
+          <section className="tab-enter app-glass rounded-2xl p-3">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <h2 className="text-sm font-semibold">Staking</h2>
