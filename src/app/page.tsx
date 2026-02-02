@@ -377,32 +377,35 @@ export default function Home() {
         </nav>
 
         {tab === "prices" ? (
-          <section className="tab-enter app-glass rounded-2xl p-3">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <h2 className="text-sm font-semibold">Dashboard</h2>
-                <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-                  Prices, wallet totals, and earnings.
-                </p>
-              </div>
-
-              <div className="flex flex-col items-end gap-1">
-                <div className="text-[11px] text-zinc-600 dark:text-zinc-400">
-                  Last updated: {pricesLastUpdatedAt == null ? "—" : new Date(pricesLastUpdatedAt).toLocaleTimeString()}
+          <section className="tab-enter flex flex-col gap-3">
+            <div className="app-glass rounded-2xl p-2">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <h2 className="text-sm font-semibold">Dashboard</h2>
+                  <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
+                    Prices, wallet totals, and earnings.
+                  </p>
                 </div>
-                <select
-                  className="h-8 rounded-lg border border-black/10 bg-white px-2 text-[11px] outline-none focus:ring-2 focus:ring-zinc-400 dark:border-white/10 dark:bg-black"
-                  value={pricesAutoRefreshMs}
-                  onChange={(e) => setPricesAutoRefreshMs(Number(e.target.value))}
-                >
-                  {refreshOptions.map((o) => (
-                    <option key={o.ms} value={o.ms}>
-                      Auto: {o.label}
-                    </option>
-                  ))}
-                </select>
+
+                <div className="flex flex-col items-end gap-1">
+                  <div className="text-[11px] text-zinc-600 dark:text-zinc-400">
+                    Last updated: {pricesLastUpdatedAt == null ? "—" : new Date(pricesLastUpdatedAt).toLocaleTimeString()}
+                  </div>
+                  <select
+                    className="h-8 rounded-lg border border-black/10 bg-white px-2 text-[11px] outline-none focus:ring-2 focus:ring-zinc-400 dark:border-white/10 dark:bg-black"
+                    value={pricesAutoRefreshMs}
+                    onChange={(e) => setPricesAutoRefreshMs(Number(e.target.value))}
+                  >
+                    {refreshOptions.map((o) => (
+                      <option key={o.ms} value={o.ms}>
+                        Auto: {o.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
+
             <Dashboard prices={prices} autoRefreshMs={stakingAutoRefreshMs} refreshLabel={refreshLabel} />
           </section>
         ) : null}
@@ -1135,9 +1138,8 @@ function Dashboard({
   }
 
   return (
-    <div className="mt-3 flex flex-col gap-3">
-      <div className="grid gap-3">
-        <div className="app-glass rounded-xl p-3">
+    <div className="flex flex-col gap-3">
+      <div className="app-glass rounded-xl p-3">
           <div className="flex items-center justify-between">
             <div className="text-sm font-semibold text-[#ff6a00]">Earnings</div>
             <span className="text-[11px] text-zinc-400">
@@ -1358,9 +1360,9 @@ function Dashboard({
               Start tracking in the Staking tab to see the chart.
             </div>
           )}
-        </div>
+      </div>
 
-        <div className="app-glass rounded-xl p-3">
+      <div className="app-glass rounded-xl p-3">
           <div className="flex items-center justify-between">
             <div className="text-sm font-semibold text-[#ff6a00]">Wallet totals</div>
             <div className="text-[11px] text-zinc-400">Live balances</div>
@@ -1415,9 +1417,9 @@ function Dashboard({
               </div>
             </div>
           </div>
-        </div>
+      </div>
 
-        <div className="app-glass rounded-xl p-3">
+      <div className="app-glass rounded-xl p-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-semibold text-[#ff6a00]">Prices</span>
             <span className="text-[11px] text-zinc-400">Tap a token</span>
@@ -1575,7 +1577,6 @@ function Dashboard({
               </div>
             </div>
           ) : null}
-        </div>
       </div>
     </div>
   );
