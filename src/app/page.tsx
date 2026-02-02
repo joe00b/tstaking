@@ -1857,7 +1857,7 @@ function Converter({
           Last updated: {quoteLastUpdatedAt == null ? "—" : new Date(quoteLastUpdatedAt).toLocaleTimeString()}
         </div>
 
-        <div className="mt-3 rounded-xl border border-white/10 bg-black/20 p-3">
+        <div className="mt-3">
           <div className="flex items-start justify-between gap-3">
             <div className="flex flex-col">
               <div className="text-[11px] text-zinc-400">Estimated received</div>
@@ -1868,9 +1868,7 @@ function Converter({
                       style: "decimal",
                       maximumFractionDigits: quote.estimatedUsdc < 1 ? 6 : 2,
                     }).format(quote.estimatedUsdc)}
-                <span className="ml-2 text-[11px] font-semibold text-zinc-300">
-                  USDC
-                </span>
+                <span className="ml-2 text-[11px] font-semibold text-zinc-300">USDC</span>
               </div>
             </div>
 
@@ -1887,14 +1885,16 @@ function Converter({
             </div>
           </div>
 
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            <div className="rounded-xl border border-white/10 bg-black/20 p-3">
+          <div className="mt-3 h-px w-full bg-white/10" />
+
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <div className="flex flex-col">
               <div className="text-[11px] text-zinc-400">Spot total</div>
               <div className="mt-1 text-sm font-semibold text-zinc-50">
                 {formatMoney(quote?.spotTotalUsd ?? null, "USD")}
               </div>
             </div>
-            <div className="rounded-xl border border-white/10 bg-black/20 p-3">
+            <div className="flex flex-col">
               <div className="text-[11px] text-zinc-400">Effective price</div>
               <div
                 className={
@@ -1911,9 +1911,7 @@ function Converter({
           </div>
 
           {quote?.minAmount != null ? (
-            <div className="mt-2 text-[11px] text-zinc-300">
-              Minimum: {quote.minAmount}
-            </div>
+            <div className="mt-2 text-[11px] text-zinc-300">Minimum: {quote.minAmount}</div>
           ) : null}
         </div>
 
@@ -2670,89 +2668,63 @@ function NetworkFees({
         ) : null}
       </div>
 
-      <div className="grid gap-3">
-        {(data?.rows ?? []).map((r) => (
-          <div
-            key={r.to}
-            className={(() => {
-              const isBest =
-                bestEstimated != null &&
-                r.estimatedUsdc != null &&
-                Math.abs(r.estimatedUsdc - bestEstimated) < 1e-9;
+      <div className="overflow-hidden rounded-xl border border-white/10">
+        {(data?.rows ?? []).map((r, idx) => {
+          const isBest =
+            bestEstimated != null &&
+            r.estimatedUsdc != null &&
+            Math.abs(r.estimatedUsdc - bestEstimated) < 1e-9;
+          const deltaVsBest =
+            bestEstimated == null || r.estimatedUsdc == null
+              ? null
+              : Math.max(0, bestEstimated - r.estimatedUsdc);
 
-              const networkToClass =
-                r.to === "usdc-sol" ? "to-[#7c3aed]/12" : "to-[#38bdf8]/12";
-              const baseBg =
-                r.to === "usdc-sol" ? "bg-[#7c3aed]/10" : "bg-[#38bdf8]/10";
+          const networkTextClass =
+            r.to === "usdc-sol" ? "text-[#7c3aed]" : "text-[#38bdf8]";
+          const networkSubtleTextClass =
+            r.to === "usdc-sol" ? "text-[#7c3aed]/80" : "text-[#38bdf8]/80";
 
-              return isBest
-                ? `rounded-xl border border-white/10 bg-gradient-to-r ${tokenAccentFromClass} ${networkToClass} p-3 text-sm ring-1 ring-white/10`
-                : `rounded-xl border border-white/10 ${baseBg} p-3 text-sm`;
-            })()}
-          >
-            {(() => {
-              const isBest =
-                bestEstimated != null &&
-                r.estimatedUsdc != null &&
-                Math.abs(r.estimatedUsdc - bestEstimated) < 1e-9;
-              const deltaVsBest =
-                bestEstimated == null || r.estimatedUsdc == null
-                  ? null
-                  : Math.max(0, bestEstimated - r.estimatedUsdc);
+          const rowBg = isBest
+            ? "bg-white/5"
+            : r.to === "usdc-sol"
+              ? "bg-[#7c3aed]/10"
+              : "bg-[#38bdf8]/10";
 
-              const networkTextClass =
-                r.to === "usdc-sol" ? "text-[#7c3aed]" : "text-[#38bdf8]";
-              const networkSubtleTextClass =
-                r.to === "usdc-sol" ? "text-[#7c3aed]/80" : "text-[#38bdf8]/80";
-
-              return (
-                <div className={`flex items-start justify-between gap-3 ${networkTextClass}`}>
-                  <div className="flex flex-col">
-                    <span
-                      className={
-                        isBest
-                          ? "text-sm font-semibold"
-                          : "text-sm font-semibold"
-                      }
-                    >
-                      {labelNetwork(r.to)}
-                    </span>
-                    <span className={`text-[11px] ${networkSubtleTextClass}`}>
-                      Estimated received
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <span className="text-sm font-semibold">
-                      {formatMoney(r.estimatedUsdc, "USDC")}
-                    </span>
-                    {spotValue != null && r.impliedFeeUsdc != null ? (
-                      <span className={`text-[11px] ${networkSubtleTextClass}`}>
-                        Vs CoinGecko spot: {formatMoney(r.impliedFeeUsdc, "USDC")}
-                        {r.impliedFeePct == null
-                          ? ""
-                          : ` (${r.impliedFeePct.toFixed(2)}%)`}
-                      </span>
-                    ) : null}
-                    {deltaVsBest != null && deltaVsBest > 0 ? (
-                      <span className={`text-[11px] ${networkSubtleTextClass}`}>
-                        Difference vs best: {formatMoney(deltaVsBest, "USDC")}
-                      </span>
-                    ) : isBest ? (
-                      <span className={`text-[11px] ${networkSubtleTextClass}`}>
-                        Best route
-                      </span>
-                    ) : null}
-                  </div>
+          return (
+            <div key={r.to} className={`${rowBg} p-3 text-sm`}>
+              {idx > 0 ? <div className="mb-3 h-px w-full bg-white/10" /> : null}
+              <div className={`flex items-start justify-between gap-3 ${networkTextClass}`}>
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold">{labelNetwork(r.to)}</span>
+                  <span className={`text-[11px] ${networkSubtleTextClass}`}>
+                    Estimated received
+                  </span>
                 </div>
-              );
-            })()}
-            {r.error ? (
-              <p className="mt-2 text-[11px] text-zinc-600 dark:text-zinc-400">
-                {r.error}
-              </p>
-            ) : null}
-          </div>
-        ))}
+                <div className="flex flex-col items-end">
+                  <span className="text-sm font-semibold">
+                    {formatMoney(r.estimatedUsdc, "USDC")}
+                  </span>
+                  {spotValue != null && r.impliedFeeUsdc != null ? (
+                    <span className={`text-[11px] ${networkSubtleTextClass}`}>
+                      Vs CoinGecko spot: {formatMoney(r.impliedFeeUsdc, "USDC")}
+                      {r.impliedFeePct == null ? "" : ` (${r.impliedFeePct.toFixed(2)}%)`}
+                    </span>
+                  ) : null}
+                  {deltaVsBest != null && deltaVsBest > 0 ? (
+                    <span className={`text-[11px] ${networkSubtleTextClass}`}>
+                      Difference vs best: {formatMoney(deltaVsBest, "USDC")}
+                    </span>
+                  ) : isBest ? (
+                    <span className={`text-[11px] ${networkSubtleTextClass}`}>Best route</span>
+                  ) : null}
+                </div>
+              </div>
+              {r.error ? (
+                <p className="mt-2 text-[11px] text-zinc-600 dark:text-zinc-400">{r.error}</p>
+              ) : null}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
