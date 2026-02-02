@@ -6,9 +6,9 @@
 
   --tfuel-orange: #ff6a00;
   --theta-teal: #14b8a6;
-  --panel: rgba(8, 9, 14, 0.58);
-  --panel-border: rgba(255, 255, 255, 0.16);
-  --panel-highlight: rgba(255, 255, 255, 0.10);
+  --panel: rgba(255, 255, 255, 0.12);
+  --panel-border: rgba(255, 255, 255, 0.28);
+  --panel-highlight: rgba(255, 255, 255, 0.40);
   --glow-teal: rgba(20, 184, 166, 0.45);
   --glow-magenta: rgba(191, 64, 181, 0.35);
 }
@@ -35,7 +35,7 @@ body {
 body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-  background-color: #05060a;
+  background-color: #1b1f2a;
   position: relative;
   overflow-x: hidden;
 }
@@ -46,11 +46,10 @@ body::before {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(1200px 700px at 22% 12%, rgba(255, 106, 0, 0.55), transparent 60%),
-    radial-gradient(900px 560px at 85% 10%, rgba(255, 214, 10, 0.40), transparent 58%),
-    radial-gradient(800px 520px at 45% 115%, rgba(255, 106, 0, 0.22), transparent 58%),
-    linear-gradient(135deg, #ff6a00 0%, #ffd60a 42%, #ff6a00 100%),
-    linear-gradient(135deg, #05060a 0%, #070814 40%, #06050a 100%);
+    radial-gradient(1200px 700px at 20% 10%, rgba(255, 255, 255, 0.10), transparent 62%),
+    radial-gradient(900px 560px at 85% 12%, rgba(0, 0, 0, 0.25), transparent 60%),
+    radial-gradient(900px 800px at 50% 120%, rgba(0, 0, 0, 0.45), transparent 60%),
+    linear-gradient(135deg, #1b1f2a 0%, #1b1f2a 100%);
   opacity: 1;
   filter: saturate(1.15);
   animation: ambient-glow 10s ease-in-out infinite alternate;
@@ -68,11 +67,10 @@ body::before {
   pointer-events: none;
   z-index: -1;
   background:
-    radial-gradient(1200px 700px at 22% 12%, rgba(255, 106, 0, 0.55), transparent 60%),
-    radial-gradient(900px 560px at 85% 10%, rgba(255, 214, 10, 0.40), transparent 58%),
-    radial-gradient(800px 520px at 45% 115%, rgba(255, 106, 0, 0.22), transparent 58%),
-    linear-gradient(135deg, #ff6a00 0%, #ffd60a 42%, #ff6a00 100%),
-    linear-gradient(135deg, #05060a 0%, #070814 40%, #06050a 100%);
+    radial-gradient(1200px 700px at 20% 10%, rgba(255, 255, 255, 0.10), transparent 62%),
+    radial-gradient(900px 560px at 85% 12%, rgba(0, 0, 0, 0.25), transparent 60%),
+    radial-gradient(900px 800px at 50% 120%, rgba(0, 0, 0, 0.45), transparent 60%),
+    linear-gradient(135deg, #1b1f2a 0%, #1b1f2a 100%);
   opacity: 1;
   filter: saturate(1.2);
   animation: ambient-glow 10s ease-in-out infinite alternate;
