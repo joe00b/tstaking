@@ -3,6 +3,14 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --tfuel-orange: #ff6a00;
+  --theta-teal: #14b8a6;
+  --panel: rgba(8, 9, 14, 0.58);
+  --panel-border: rgba(255, 255, 255, 0.16);
+  --panel-highlight: rgba(255, 255, 255, 0.10);
+  --glow-teal: rgba(20, 184, 166, 0.45);
+  --glow-magenta: rgba(191, 64, 181, 0.35);
 }
 
 @theme inline {
@@ -19,8 +27,117 @@
   }
 }
 
+html,
 body {
-  background: var(--background);
+  min-height: 100%;
+}
+
+body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  background-color: #05060a;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(1200px 600px at 18% 10%, var(--glow-teal), transparent 58%),
+    radial-gradient(950px 560px at 88% 8%, var(--glow-magenta), transparent 55%),
+    radial-gradient(800px 520px at 40% 115%, rgba(255, 106, 0, 0.14), transparent 55%),
+    linear-gradient(135deg, #05060a 0%, #070814 40%, #06050a 100%);
+  opacity: 1;
+  filter: saturate(1.15);
+  animation: ambient-glow 10s ease-in-out infinite alternate;
+}
+
+.app-bg {
+  position: relative;
+  isolation: isolate;
+}
+
+.app-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(1200px 600px at 18% 10%, var(--glow-teal), transparent 58%),
+    radial-gradient(950px 560px at 88% 8%, var(--glow-magenta), transparent 55%),
+    radial-gradient(800px 520px at 40% 115%, rgba(255, 106, 0, 0.18), transparent 55%),
+    linear-gradient(135deg, #05060a 0%, #070814 40%, #06050a 100%);
+  opacity: 1;
+  filter: saturate(1.2);
+  animation: ambient-glow 10s ease-in-out infinite alternate;
+}
+
+.app-glass {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 var(--panel-highlight);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+@keyframes ambient-glow {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+.ios-press {
+  transition:
+    transform 140ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    opacity 180ms ease;
+}
+
+.ios-press:active {
+  transform: scale(0.98);
+}
+
+.tab-enter {
+  animation: tab-enter 180ms ease-out;
+}
+
+@keyframes tab-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ios-press {
+    transition: none;
+  }
+  .ios-press:active {
+    transform: none;
+  }
+  .tab-enter {
+    animation: none;
+  }
+  body::before {
+    animation: none;
+  }
+  .app-bg::before {
+    animation: none;
+  }
 }
